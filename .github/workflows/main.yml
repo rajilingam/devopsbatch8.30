@@ -1,0 +1,30 @@
+name: Sync Repo Branch
+on:
+  workflow_dispatch:
+    inputs:
+      PAT:
+        type: string
+        description: Github PAT
+        required: true
+      
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v2
+
+      - name: Push to destination repository
+        run: |
+          git config --global user.email "mraji31@rediffmail.com"
+          git config --global user.name "rajilingam"
+          git clone https://${{ inputs.PAT }}@github.com/${{ env.ORG_NAME }}/sync-destination.git
+          cd sync-destination
+          git remote add source https://${{ inputs.PAT }}@github.com/${{ env.ORG_NAME }}/${{ env.SOURCE_REPO }}.git
+          git fetch source
+          git merge source/main
+          git push origin main
+        env:
+          SOURCE_REPO: ${{ github.event.repository.name }}
+          ORG_NAME: rajilingam
