@@ -23,8 +23,10 @@ jobs:
           cd sync-destination
           git remote add source https://${{ inputs.PAT }}@github.com/${{ env.ORG_NAME }}/${{ env.SOURCE_REPO }}.git
           git fetch source
-          git merge source/main
+          git merge source/main -m "Syncing from source repository"
           git push origin main
         env:
           SOURCE_REPO: ${{ github.event.repository.name }}
           ORG_NAME: rajilingam
+
+        
